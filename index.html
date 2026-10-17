@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0F1D3A">
+<title>NORTHEAST MARKET - Your Market, Your People</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+  :root{--navy:#0F1D3A;--gold:#FFC300}
+  body{font-family:Arial,Helvetica,sans-serif}
+  .btn{border-radius:999px;padding:.7rem 1rem;font-weight:700}
+  .gold{background:var(--gold);color:var(--navy)}
+  .navy{background:var(--navy);color:white}
+  .field{width:100%;border:1px solid #d1d5db;border-radius:12px;padding:11px;margin-top:5px;background:white}
+  .panel{background:white;border:1px solid #e5e7eb;border-radius:18px;padding:16px}
+  .navbtn{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;padding:8px;color:#374151}
+  .navbtn i{font-size:18px}
+  .hidden-page{display:none}
+</style>
+</head>
+<body class="bg-gray-50 text-gray-900 pb-24">
+<header class="bg-[#0F1D3A] text-white sticky top-0 z-40 p-3 sm:p-4 shadow">
+  <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+    <a href="#" onclick="showPage('home');return false" class="flex items-center gap-2 font-extrabold text-sm sm:text-base">
+      <span class="bg-[#FFC300] text-[#0F1D3A] w-9 h-9 flex items-center justify-center rounded-lg text-xl">N</span>
+      <span>NORTHEAST MARKET</span>
+    </a>
+    <div class="flex items-center gap-2">
+      <select id="langSelector" onchange="changeLang(this.value)" class="bg-[#1A2E5A] text-xs rounded-full px-3 py-2 border border-blue-700">
+        <option value="en">English</option><option value="ha">Hausa</option><option value="yo">Yorùbá</option>
+      </select>
+      <button onclick="showPage('cart')" class="relative px-2 py-1" aria-label="Cart"><i class="fa-solid fa-cart-shopping text-lg"></i><span id="cartCount" class="absolute -top-2 -right-1 bg-[#FFC300] text-[#0F1D3A] text-xs rounded-full min-w-5 h-5 flex items-center justify-center">0</span></button>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto p-4">
+  <section id="page-home">
+    <div class="bg-[#0F1D3A] text-white p-7 sm:p-10 rounded-[2rem] text-center">
+      <p class="text-[#FFC300] font-bold text-xs tracking-widest mb-3">YOUR MARKET • YOUR PEOPLE</p>
+      <h1 id="heroTitle" class="text-3xl sm:text-5xl font-extrabold leading-tight">Shop Local.<br><span class="text-[#FFC300]">Buy With Confidence.</span></h1>
+      <p id="heroSub" class="mt-3 opacity-80">Discover products across Northeast Nigeria.</p>
+      <button onclick="showPage('categories')" id="btnStartShop" class="mt-5 gold btn">Start Shopping <i class="fa-solid fa-arrow-right ml-1"></i></button>
+    </div>
+    <div class="mt-5 flex gap-2">
+      <input id="searchInput" class="field mt-0" placeholder="Search products..." oninput="renderProducts()">
+      <button class="gold rounded-xl px-4" onclick="renderProducts()" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
+    <div class="flex items-center justify-between mt-7 gap-2">
+      <h2 id="popularTitle" class="text-xl font-extrabold">Popular products</h2>
+      <button id="viewAll" class="text-sm font-bold text-blue-900" onclick="showPage('categories')">View all</button>
+    </div>
+    <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4"></div>
+    <div class="grid sm:grid-cols-3 gap-3 mt-8">
+      <div class="panel"><i class="fa-solid fa-store text-2xl text-yellow-600"></i><h3 class="font-bold mt-2" id="sellerInfoTitle">For Sellers</h3><p class="text-sm text-gray-600 mt-1" id="sellerInfo">List your products and reach more customers.</p><button class="text-sm font-bold mt-3 text-blue-900" onclick="showPage('sell')" id="becomeSeller">Become a seller →</button></div>
+      <div class="panel"><i class="fa-solid fa-truck-fast text-2xl text-yellow-600"></i><h3 class="font-bold mt-2" id="deliveryInfoTitle">Delivery partners</h3><p class="text-sm text-gray-600 mt-1" id="deliveryInfo">Work with sellers to deliver orders.</p><button class="text-sm font-bold mt-3 text-blue-900" onclick="showPage('register')" id="joinPartner">Join as partner →</button></div>
+      <div class="panel"><i class="fa-solid fa-shield-halved text-2xl text-yellow-600"></i><h3 class="font-bold mt-2" id="safeTitle">Shop carefully</h3><p class="text-sm text-gray-600 mt-1" id="safeInfo">Confirm product details and delivery charges before paying.</p></div>
+    </div>
+  </section>
+
+  <section id="page-categories" class="hidden-page">
+    <h1 id="categoriesTitle" class="text-2xl font-extrabold mb-4">Shop by category</h1>
+    <div id="categoryGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3"></div>
+    <h2 id="allProductsTitle" class="text-xl font-bold mt-8 mb-3">All products</h2>
+    <div id="categoryProducts" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+  </section>
+
+  <section id="page-cart" class="hidden-page">
+    <h1 id="cartTitle" class="text-2xl font-extrabold mb-4">Your cart</h1>
+    <div id="cartContents" class="space-y-3"></div>
+    <div id="checkoutBox" class="panel mt-5 hidden">
+      <h2 id="checkoutTitle" class="font-extrabold text-lg mb-3">Delivery details</h2>
+      <form onsubmit="placeOrder(event)" class="space-y-3">
+        <label><span id="nameLabel">Full name</span><input id="buyerName" required class="field" autocomplete="name"></label>
+        <label><span id="phoneLabel">Phone number</span><input id="buyerPhone" required class="field" type="tel" autocomplete="tel" placeholder="080..."></label>
+        <label><span id="stateLabel">State</span><select id="buyerState" required class="field" onchange="updatePaymentHint()"><option value="">Select state</option><option>Borno</option><option>Yobe</option><option>Adamawa</option><option>Gombe</option><option>Bauchi</option><option>Taraba</option><option>Other state</option></select></label>
+        <label><span id="townLabel">Town / LGA</span><input id="buyerTown" required class="field"></label>
+        <label><span id="addressLabel">Delivery address</span><textarea id="buyerAddress" required class="field" rows="2"></textarea></label>
+        <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-3 text-sm"><b id="paymentHintTitle">Payment note:</b> <span id="paymentHint">Cash on delivery may be available in supported local areas. Confirm payment arrangements before dispatch.</span></div>
+        <div id="orderTotal" class="font-extrabold text-lg"></div>
+        <button id="placeOrderBtn" class="gold btn w-full" type="submit">Place demo order</button>
+      </form>
+    </div>
+  </section>
+
+  <section id="page-orders" class="hidden-page">
+    <h1 id="ordersTitle" class="text-2xl font-extrabold mb-4">My orders</h1>
+    <div id="ordersList" class="space-y-3"></div>
+  </section>
+
+  <section id="page-sell" class="hidden-page">
+    <h1 id="sellTitle" class="text-2xl font-extrabold mb-2">Sell on NORTHEAST MARKET</h1>
+    <p id="sellIntro" class="text-gray-600 mb-5">Create a demo listing. In this prototype, listings are saved only in this browser.</p>
+    <form onsubmit="addProduct(event)" class="panel space-y-3">
+      <label><span id="productNameLabel">Product name</span><input id="newProductName" required class="field"></label>
+      <label><span id="productPriceLabel">Price (₦)</span><input id="newProductPrice" required class="field" type="number" min="1"></label>
+      <label><span id="productCategoryLabel">Category</span><select id="newProductCategory" class="field"></select></label>
+      <label><span id="productStateLabel">State</span><select id="newProductState" class="field"><option>Borno</option><option>Yobe</option><option>Adamawa</option><option>Gombe</option><option>Bauchi</option><option>Taraba</option></select></label>
+      <label><span id="productImageLabel">Image URL (optional)</span><input id="newProductImage" class="field" type="url" placeholder="https://..."></label>
+      <label><span id="sellerNameLabel">Seller / shop name</span><input id="newSellerName" required class="field"></label>
+      <button id="addProductBtn" class="gold btn w-full">Add demo product</button>
+    </form>
+  </section>
+
+  <section id="page-register" class="hidden-page">
+    <h1 id="registerTitle" class="text-2xl font-extrabold mb-4">Register / Login demo</h1>
+    <div class="panel">
+      <p id="demoWarning" class="text-sm bg-yellow-50 border border-yellow-200 rounded-xl p-3 mb-4">Demo only: these accounts are not secure and must not be used for real customer data.</p>
+      <h2 class="font-bold mb-2" id="demoAccountsTitle">Demo accounts</h2>
+      <div class="text-sm space-y-2 mb-5">
+        <p><b>Admin:</b> 08000000000 / admin123</p>
+        <p><b>Seller:</b> 08011111111 / seller123</p>
+        <p><b>Buyer:</b> 08022222222 / buyer123</p>
+      </div>
+      <form onsubmit="loginDemo(event)" class="space-y-3">
+        <label>Phone number<input id="loginPhone" class="field" required type="tel"></label>
+        <label>Password<input id="loginPassword" class="field" required type="password"></label>
+        <button class="gold btn w-full" id="loginBtn">Login to demo</button>
+      </form>
+      <div id="loginMessage" class="text-sm mt-3" role="status"></div>
+    </div>
+  </section>
+
+  <section id="page-admin" class="hidden-page">
+    <h1 id="adminTitle" class="text-2xl font-extrabold mb-4">Admin demo dashboard</h1>
+    <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-3 text-sm mb-4" id="adminWarning">Demo panel only. Do not use for real transactions or personal data.</div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5" id="adminStats"></div>
+    <div class="panel">
+      <h2 class="font-extrabold mb-3" id="adminOrdersTitle">Recent demo orders</h2>
+      <div id="adminOrders" class="space-y-3"></div>
+    </div>
+  </section>
+
+  <section id="page-profile" class="hidden-page">
+    <h1 id="profileTitle" class="text-2xl font-extrabold mb-4">Profile</h1>
+    <div class="panel">
+      <p id="profileStatus">You are browsing as a guest.</p>
+      <div class="flex flex-wrap gap-2 mt-4">
+        <button class="navy btn" onclick="showPage('register')" id="loginRegisterBtn">Login / Register</button>
+        <button class="gold btn" onclick="showPage('admin')" id="adminPanelBtn">Admin demo</button>
+        <button class="border rounded-full px-4 py-2 font-bold" onclick="logoutDemo()" id="logoutBtn">Log out</button>
+      </div>
+    </div>
+    <div class="panel mt-4">
+      <h2 id="aboutTitle" class="font-extrabold">About NORTHEAST MARKET</h2>
+      <p id="aboutText" class="text-sm text-gray-600 mt-2">A demo marketplace concept connecting buyers and sellers. Real payments, shared database, identity verification and delivery integrations are not yet configured.</p>
+    </div>
+  </section>
+</main>
+
+<nav class="fixed bottom-0 inset-x-0 bg-white border-t z-50 flex justify-around shadow-lg">
+  <button class="navbtn" onclick="showPage('home')"><i class="fa-solid fa-house"></i><span id="navHome">Home</span></button>
+  <button class="navbtn" onclick="showPage('categories')"><i class="fa-solid fa-layer-group"></i><span id="navCategories">Categories</span></button>
+  <button class="navbtn" onclick="showPage('cart')"><i class="fa-solid fa-cart-shopping"></i><span id="navCart">Cart</span></button>
+  <button class="navbtn" onclick="showPage('sell')"><i class="fa-solid fa-store"></i><span id="navSell">Sell</span></button>
+  <button class="navbtn" onclick="showPage('profile')"><i class="fa-solid fa-user"></i><span id="navProfile">Profile</span></button>
+</nav>
+
+<script>
+const defaultProducts = [
+ {id:1,name:'Kanuri Cap',price:8500,state:'Borno',seller:'Kanuri Heritage',verified:true,category:'Kanuri caps',img:'https://images.unsplash.com/photo-1521369909029-2afed882baee?w=600'},
+ {id:2,name:'Firewood Bundle',price:15000,state:'Borno',seller:'Musa Depot',verified:true,category:'Firewood',img:'https://images.unsplash.com/photo-1589923188651-268a1a2d0e1d?w=600'},
+ {id:3,name:'Atamfa Wrapper',price:12000,state:'Borno',seller:'Aisha Fabrics',verified:true,category:'Atamfa & fabrics',img:'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=600'},
+ {id:4,name:'Traditional Cap',price:5000,state:'Yobe',seller:'Sahel Caps',verified:true,category:'Caps & hats',img:'https://images.unsplash.com/photo-1521369909029-2afed882baee?w=600'},
+ {id:5,name:'Healthy Chicken',price:9500,state:'Borno',seller:'Maiduguri Poultry',verified:true,category:'Chickens & poultry',img:'https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=600'},
+ {id:6,name:'Young Goat',price:65000,state:'Gombe',seller:'Gombe Livestock',verified:false,category:'Goats & livestock',img:'https://images.unsplash.com/photo-1524024973431-2ad916746881?w=600'}
+];
+const categories = [
+ {en:'Firewood',ha:'Itacen girki',yo:'Ìgi iná',icon:'fa-fire'},
+ {en:'Caps & hats',ha:'Huluna',yo:'Fìlà',icon:'fa-hat-cowboy'},
+ {en:'Kanuri caps',ha:'Hular Kanuri',yo:'Fìlà Kanuri',icon:'fa-user-tie'},
+ {en:'Atamfa & fabrics',ha:'Atamfa da yadudduka',yo:'Aṣọ àti atamfa',icon:'fa-shirt'},
+ {en:'Chickens & poultry',ha:'Kaji da kiwon kaji',yo:'Adìẹ',icon:'fa-kiwi-bird'},
+ {en:'Goats & livestock',ha:'Awaki da dabbobi',yo:'Ewúrẹ́ àti ẹran ọ̀sìn',icon:'fa-paw'},
+ {en:'Clothing & fashion',ha:'Tufafi da kayan ado',yo:'Aṣọ àti ọ̀ṣọ́',icon:'fa-shirt'},
+ {en:'Food & agriculture',ha:'Abinci da noma',yo:'Oúnjẹ àti iṣẹ́ àgbẹ̀',icon:'fa-wheat-awn'},
+ {en:'Household items',ha:'Kayan gida',yo:'Ohun èlò ilé',icon:'fa-house'},
+ {en:'Other products',ha:'Sauran kayayyaki',yo:'Àwọn ọjà mìíràn',icon:'fa-box'}
+];
+const translations = {
+ en:{heroSub:'Discover products across Northeast Nigeria.',start:'Start Shopping',popular:'Popular products',viewAll:'View all',search:'Search products...',categories:'Shop by category',allProducts:'All products',cart:'Your cart',emptyCart:'Your cart is empty.',checkout:'Delivery details',fullName:'Full name',phone:'Phone number',state:'State',town:'Town / LGA',address:'Delivery address',paymentTitle:'Payment note:',payment:'Cash on delivery may be available in supported local areas. Confirm payment arrangements before dispatch.',placeOrder:'Place demo order',orders:'My orders',sellTitle:'Sell on NORTHEAST MARKET',sellIntro:'Create a demo listing. In this prototype, listings are saved only in this browser.',productName:'Product name',price:'Price (₦)',category:'Category',image:'Image URL (optional)',sellerName:'Seller / shop name',addProduct:'Add demo product',register:'Register / Login demo',demoWarning:'Demo only: these accounts are not secure and must not be used for real customer data.',demoAccounts:'Demo accounts',login:'Login to demo',admin:'Admin demo dashboard',adminWarning:'Demo panel only. Do not use for real transactions or personal data.',recentOrders:'Recent demo orders',profile:'Profile',guest:'You are browsing as a guest.',loginRegister:'Login / Register',adminPanel:'Admin demo',logout:'Log out',about:'About NORTHEAST MARKET',aboutText:'A demo marketplace concept connecting buyers and sellers. Real payments, shared database, identity verification and delivery integrations are not yet configured.',sellerInfoTitle:'For Sellers',sellerInfo:'List your products and reach more customers.',becomeSeller:'Become a seller →',deliveryTitle:'Delivery partners',deliveryInfo:'Work with sellers to deliver orders.',joinPartner:'Join as partner →',safeTitle:'Shop carefully',safeInfo:'Confirm product details and delivery charges before paying.',navHome:'Home',navCategories:'Categories',navCart:'Cart',navSell:'Sell',navProfile:'Profile',added:'Product added to this browser demo.',orderSuccess:'Demo order placed. Reference: ',loginSuccess:'Demo login successful as ',loginFailed:'The phone number or password did not match a demo account.',loggedOut:'Logged out.',remove:'Remove',subtotal:'Products subtotal',delivery:'Estimated delivery',total:'Estimated total',noOrders:'No orders yet.',order:'Order',status:'Status',pending:'Demo order — not sent to a seller or courier',statePlaceholder:'Select state',seller:'Seller',verified:'Verified',addToCart:'Add to cart',quantity:'Qty',adminStatsOrders:'Orders',adminStatsProducts:'Products',adminStatsUsers:'Demo accounts',adminStatsCommission:'Example commission (5%)',noAdminOrders:'No demo orders yet.',productState:'State',sellerApproved:'Demo seller listing — not verified by a real administrator.'},
+ ha:{heroSub:'Nemo kayayyaki a jihohin Arewa maso Gabashin Najeriya.',start:'Fara Siyayya',popular:'Kayayyakin da aka fi so',viewAll:'Duba duka',search:'Nemo kaya...',categories:'Sayi bisa rukuni',allProducts:'Dukkan kayayyaki',cart:'Kwandon sayayya',emptyCart:'Kwandonka babu kaya.',checkout:'Bayanan isarwa',fullName:'Cikakken suna',phone:'Lambar waya',state:'Jiha',town:'Gari / Karamar hukuma',address:'Adireshin isarwa',paymentTitle:'Bayanin biyan kuɗi:',payment:'Ana iya samun biyan kuɗi lokacin isarwa a wasu wurare. Tabbatar da tsarin biyan kuɗi kafin aikawa.',placeOrder:'Yi odar gwaji',orders:'Oda nawa',sellTitle:'Sayar a NORTHEAST MARKET',sellIntro:'Ƙirƙiri tallan kaya na gwaji. A wannan sigar, ana ajiye kayan a wannan browser kawai.',productName:'Sunan kaya',price:'Farashi (₦)',category:'Rukuni',image:'Adireshin hoton kaya (ba dole ba)',sellerName:'Sunan mai sayarwa / shago',addProduct:'Ƙara kayan gwaji',register:'Shiga / Rajistar gwaji',demoWarning:'Gwaji ne kawai: waɗannan asusun ba su da cikakken tsaro, kada a yi amfani da su da bayanan kwastomomi na gaske.',demoAccounts:'Asusun gwaji',login:'Shiga gwaji',admin:'Shafin admin na gwaji',adminWarning:'Shafin gwaji ne kawai. Kada a yi amfani da shi wajen ciniki ko bayanan sirri na gaske.',recentOrders:'Sabbin odar gwaji',profile:'Bayanan mai amfani',guest:'Kana duba shafin a matsayin baƙo.',loginRegister:'Shiga / Rajista',adminPanel:'Admin na gwaji',logout:'Fita',about:'Game da NORTHEAST MARKET',aboutText:'Wannan samfurin kasuwar intanet ne da ke haɗa masu saye da masu sayarwa. Ba a haɗa ainihin biyan kuɗi, database na haɗin gwiwa, tantance shaida ko tsarin jigilar kaya ba tukuna.',sellerInfoTitle:'Ga masu sayarwa',sellerInfo:'Saka kayanka domin ƙarin kwastomomi su gani.',becomeSeller:'Zama mai sayarwa →',deliveryTitle:'Abokan jigilar kaya',deliveryInfo:'Yi aiki da masu sayarwa wajen kai oda.',joinPartner:'Shiga a matsayin abokin aiki →',safeTitle:'Yi sayayya cikin kulawa',safeInfo:'Tabbatar da bayanin kaya da kuɗin kaiwa kafin biya.',navHome:'Gida',navCategories:'Rukuni',navCart:'Kwando',navSell:'Sayar',navProfile:'Asusu',added:'An ƙara kayan a wannan gwajin browser.',orderSuccess:'An yi odar gwaji. Lambar oda: ',loginSuccess:'An shiga asusun gwaji: ',loginFailed:'Lambar waya ko kalmar sirri ba ta dace da asusun gwaji ba.',loggedOut:'An fita.',remove:'Cire',subtotal:'Jimillar kayan',delivery:'Kiyasin kuɗin kaiwa',total:'Jimillar kuɗi',noOrders:'Babu oda tukuna.',order:'Oda',status:'Matsayi',pending:'Odar gwaji — ba a aika wa mai sayarwa ko direba ba',statePlaceholder:'Zaɓi jiha',seller:'Mai sayarwa',verified:'An tantance',addToCart:'Ƙara a kwando',quantity:'Adadi',adminStatsOrders:'Oda',adminStatsProducts:'Kayayyaki',adminStatsUsers:'Asusun gwaji',adminStatsCommission:'Misalin commission (5%)',noAdminOrders:'Babu odar gwaji tukuna.',productState:'Jiha',sellerApproved:'Tallan gwaji ne — ba a tantance shi ta admin na gaske ba.'},
+ yo:{heroSub:'Ṣàwárí ọjà ní Àríwá Ìlà-Oòrùn Nàìjíríà.',start:'Bẹ̀rẹ̀ Ríràjà',popular:'Àwọn ọjà tó gbajúmọ̀',viewAll:'Wo gbogbo rẹ̀',search:'Ṣàwárí ọjà...',categories:'Ra nípa ẹ̀ka',allProducts:'Gbogbo ọjà',cart:'Apò rírà',emptyCart:'Apò rírà rẹ ṣófo.',checkout:'Àlàyé ìfijiṣẹ́',fullName:'Orúkọ kíkún',phone:'Nọ́mbà fóònù',state:'Ìpínlẹ̀',town:'Ìlú / LGA',address:'Àdírẹ́sì ìfijiṣẹ́',paymentTitle:'Àkíyèsí ìsanwó:',payment:'Ìsanwó nígbà ìfijiṣẹ́ lè wà ní àwọn agbègbè kan. Jẹ́rìí sí ọ̀nà ìsanwó kí a tó fi ọjà ránṣẹ́.',placeOrder:'Fi àṣẹ rírà àdánwò sílẹ̀',orders:'Àwọn àṣẹ rírà mi',sellTitle:'Ta ọjà lórí NORTHEAST MARKET',sellIntro:'Ṣẹ̀dá àkójọ ọjà àdánwò. Nínú àpẹẹrẹ yìí, a ń fi ọjà pamọ́ sínú browser yìí nìkan.',productName:'Orúkọ ọjà',price:'Iye owó (₦)',category:'Ẹ̀ka',image:'URL àwòrán (kò pọn dandan)',sellerName:'Orúkọ olùtajà / ilé ìtajà',addProduct:'Fi ọjà àdánwò kún un',register:'Wọlé / Ìforúkọsílẹ̀ àdánwò',demoWarning:'Àdánwò nìkan: àkọọ́lẹ̀ wọ̀nyí kò ní ààbò tó pé, má ṣe lò wọ́n fún ìwífún oníbàárà gidi.',demoAccounts:'Àkọọ́lẹ̀ àdánwò',login:'Wọlé sí àdánwò',admin:'Pánẹ́lì admin àdánwò',adminWarning:'Àpẹẹrẹ nìkan. Má ṣe lò ó fún ìṣòwò gidi tàbí ìwífún ara ẹni.',recentOrders:'Àwọn àṣẹ rírà àdánwò tuntun',profile:'Profaili',guest:'O ń wo ojú-òpó bí àlejò.',loginRegister:'Wọlé / Forúkọsílẹ̀',adminPanel:'Admin àdánwò',logout:'Jáde',about:'Nípa NORTHEAST MARKET',aboutText:'Àpẹẹrẹ ọjà orí ayélujára tó ń so àwọn olùrà pọ̀ mọ́ àwọn olùtajà. A kò tíì so ìsanwó gidi, ibi ìpamọ́ dátà àpapọ̀, ìjẹ́rìí ìdánimọ̀ tàbí iṣẹ́ ìfijiṣẹ́ pọ̀ mọ́ ọn.',sellerInfoTitle:'Fún àwọn olùtajà',sellerInfo:'Fi ọjà rẹ sílẹ̀ kí àwọn oníbàárà púpọ̀ lè rí i.',becomeSeller:'Di olùtajà →',deliveryTitle:'Àwọn alábàáṣiṣẹ́ ìfijiṣẹ́',deliveryInfo:'Ṣiṣẹ́ pẹ̀lú àwọn olùtajà láti fi ọjà dé ọdọ́ oníbàárà.',joinPartner:'Darapọ̀ gẹ́gẹ́ bí alábàáṣiṣẹ́ →',safeTitle:'Ra pẹ̀lú ìṣọ́ra',safeInfo:'Jẹ́rìí sí àlàyé ọjà àti owó ìfijiṣẹ́ kí o tó sanwó.',navHome:'Ilé',navCategories:'Ẹ̀ka',navCart:'Apò',navSell:'Ta ọjà',navProfile:'Profaili',added:'A fi ọjà kún àpẹẹrẹ browser yìí.',orderSuccess:'A dá àṣẹ rírà àdánwò sílẹ̀. Nọ́mbà ìtọ́kasí: ',loginSuccess:'Wọlé sí àkọọ́lẹ̀ àdánwò gẹ́gẹ́ bí ',loginFailed:'Nọ́mbà fóònù tàbí ọ̀rọ̀ aṣínà kò bá àkọọ́lẹ̀ àdánwò mu.',loggedOut:'O ti jáde.',remove:'Yọ kúrò',subtotal:'Àpapọ̀ iye ọjà',delivery:'Iye ìfijiṣẹ́ tí a fojú díwọ̀n',total:'Àpapọ̀ iye owó',noOrders:'Kò sí àṣẹ rírà kankan síbẹ̀.',order:'Àṣẹ rírà',status:'Ipò',pending:'Àṣẹ àdánwò — a kò tíì fi ránṣẹ́ sí olùtajà tàbí akẹ́rù',statePlaceholder:'Yan ìpínlẹ̀',seller:'Olùtajà',verified:'A ti jẹ́rìí',addToCart:'Fi kún apò',quantity:'Iye',adminStatsOrders:'Àwọn àṣẹ rírà',adminStatsProducts:'Ọjà',adminStatsUsers:'Àkọọ́lẹ̀ àdánwò',adminStatsCommission:'Àpẹẹrẹ commission (5%)',noAdminOrders:'Kò sí àṣẹ rírà àdánwò síbẹ̀.',productState:'Ìpínlẹ̀',sellerApproved:'Àkójọ ọjà àdánwò ni — admin gidi kò tíì jẹ́rìí sí i.'}
+};
+let products = load('nem_products', defaultProducts);
+let cart = load('nem_cart', []);
+let orders = load('nem_orders', []);
+let currentUser = load('nem_user', null);
+let lang = localStorage.getItem('nem_lang') || 'en';
+const $ = id => document.getElementById(id);
+function load(key, fallback){try{const v=localStorage.getItem(key);return v?JSON.parse(v):JSON.parse(JSON.stringify(fallback))}catch(e){return JSON.parse(JSON.stringify(fallback))}}
+function saveAll(){localStorage.setItem('nem_products',JSON.stringify(products));localStorage.setItem('nem_cart',JSON.stringify(cart));localStorage.setItem('nem_orders',JSON.stringify(orders));localStorage.setItem('nem_user',JSON.stringify(currentUser))}
+function t(key){return (translations[lang]&&translations[lang][key])||translations.en[key]||key}
+function money(n){return '₦'+Number(n||0).toLocaleString('en-NG')}
+function changeLang(value){lang=value;localStorage.setItem('nem_lang',lang);document.documentElement.lang=lang;applyTranslations();renderProducts();renderCategories();renderCart();renderOrders();renderAdmin();$('langSelector').value=lang}
+function applyTranslations(){
+ const map={heroSub:'heroSub',btnStartShop:'start',popularTitle:'popular',viewAll:'viewAll',categoriesTitle:'categories',allProductsTitle:'allProducts',cartTitle:'cart',checkoutTitle:'checkout',nameLabel:'fullName',phoneLabel:'phone',stateLabel:'state',townLabel:'town',addressLabel:'address',paymentHintTitle:'paymentTitle',paymentHint:'payment',placeOrderBtn:'placeOrder',ordersTitle:'orders',sellTitle:'sellTitle',sellIntro:'sellIntro',productNameLabel:'productName',productPriceLabel:'price',productCategoryLabel:'category',productImageLabel:'image',sellerNameLabel:'sellerName',addProductBtn:'addProduct',registerTitle:'register',demoWarning:'demoWarning',demoAccountsTitle:'demoAccounts',loginBtn:'login',adminTitle:'admin',adminWarning:'adminWarning',adminOrdersTitle:'recentOrders',profileTitle:'profile',profileStatus:'guest',loginRegisterBtn:'loginRegister',adminPanelBtn:'adminPanel',logoutBtn:'logout',aboutTitle:'about',aboutText:'aboutText',sellerInfoTitle:'sellerInfoTitle',sellerInfo:'sellerInfo',becomeSeller:'becomeSeller',deliveryInfoTitle:'deliveryTitle',deliveryInfo:'deliveryInfo',joinPartner:'joinPartner',safeTitle:'safeTitle',safeInfo:'safeInfo',navHome:'navHome',navCategories:'navCategories',navCart:'navCart',navSell:'navSell',navProfile:'navProfile'};
+ Object.entries(map).forEach(([id,key])=>{if($(id))$(id).textContent=t(key)});
+ $('searchInput').placeholder=t('search');$('buyerState').options[0].textContent=t('statePlaceholder');
+ $('profileStatus').textContent=currentUser?`${currentUser.role}: ${currentUser.name}`:t('guest');
+ fillCategorySelect();
+}
+function showPage(name){
+ document.querySelectorAll('main > section').forEach(s=>s.classList.add('hidden-page'));
+ const page=$('page-'+name);if(page)page.classList.remove('hidden-page');
+ if(name==='cart')renderCart();if(name==='orders')renderOrders();if(name==='admin')renderAdmin();if(name==='categories')renderCategories();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function renderProducts(target='productGrid'){
+ const query=($('searchInput')?.value||'').trim().toLowerCase();
+ const list=products.filter(p=>!query||(`${p.name} ${p.category} ${p.state} ${p.seller}`).toLowerCase().includes(query));
+ const el=$(target);if(!el)return;
+ if(!list.length){el.innerHTML='<p class="col-span-full text-gray-500 py-8">No products found. Try another search.</p>';return}
+ el.innerHTML=list.map(p=>`<article class="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm"><img loading="lazy" src="${safe(p.img||'')}" onerror="this.src='https://placehold.co/600x400?text=Product'" alt="${safe(p.name)}" class="h-32 sm:h-44 w-full object-cover"><div class="p-3"><p class="text-xs bg-green-100 text-green-800 inline-block px-2 py-1 rounded-full">${safe(p.state)} · ${p.verified?t('verified'):'Demo listing'}</p><h3 class="font-bold text-sm mt-2">${safe(p.name)}</h3><p class="text-xs text-gray-500 mt-1">${t('seller')}: ${safe(p.seller)}</p><p class="font-extrabold mt-2">${money(p.price)}</p><button class="gold rounded-xl px-3 py-2 text-sm font-bold w-full mt-3" onclick="addToCart(${Number(p.id)})"><i class="fa-solid fa-cart-plus mr-1"></i>${t('addToCart')}</button></div></article>`).join('');
+}
+function renderCategories(){
+ $('categoryGrid').innerHTML=categories.map(c=>`<button class="panel text-left hover:border-yellow-400" onclick="filterCategory('${safe(c.en)}')"><i class="fa-solid ${c.icon} text-2xl text-yellow-600"></i><p class="font-bold text-sm mt-2">${safe(c[lang]||c.en)}</p></button>`).join('');
+ renderProducts('categoryProducts');
+}
+function filterCategory(name){$('searchInput').value=name;showPage('home');renderProducts()}
+function addToCart(id){const p=products.find(x=>x.id===id);if(!p)return;const item=cart.find(x=>x.id===id);if(item)item.qty++;else cart.push({id,qty:1});saveAll();renderCart();alert(`${p.name} — ${t('added')}`);$('cartCount').textContent=cart.reduce((a,x)=>a+x.qty,0)}
+function removeFromCart(id){cart=cart.filter(x=>x.id!==id);saveAll();renderCart()}
+function changeQty(id,delta){const item=cart.find(x=>x.id===id);if(item)item.qty+=delta;cart=cart.filter(x=>x.qty>0);saveAll();renderCart()}
+function estimateDelivery(){const state=$('buyerState').value;return state==='Borno'?1500:state?3500:0}
+function renderCart(){
+ $('cartCount').textContent=cart.reduce((a,x)=>a+x.qty,0);
+ const el=$('cartContents');
+ if(!cart.length){el.innerHTML=`<div class="panel text-gray-500">${t('emptyCart')}</div>`;$('checkoutBox').classList.add('hidden');return}
+ const subtotal=cart.reduce((sum,x)=>{const p=products.find(p=>p.id===x.id);return sum+(p?p.price*x.qty:0)},0);
+ el.innerHTML=cart.map(x=>{const p=products.find(p=>p.id===x.id);if(!p)return '';return `<div class="panel flex items-center gap-3"><img src="${safe(p.img)}" onerror="this.src='https://placehold.co/100x100?text=Item'" class="w-20 h-20 object-cover rounded-xl"><div class="flex-1"><b>${safe(p.name)}</b><p class="font-bold">${money(p.price)}</p><div class="flex items-center gap-2 mt-2"><button class="border rounded px-3" onclick="changeQty(${p.id},-1)">−</button><span>${x.qty}</span><button class="border rounded px-3" onclick="changeQty(${p.id},1)">+</button></div></div><button class="text-red-600 text-sm" onclick="removeFromCart(${p.id})">${t('remove')}</button></div>`}).join('');
+ $('checkoutBox').classList.remove('hidden');
+ $('orderTotal').innerHTML=`${t('subtotal')}: ${money(subtotal)}<br><span class="text-sm font-medium text-gray-600">${t('delivery')}: ${money(estimateDelivery())}</span><br>${t('total')}: ${money(subtotal+estimateDelivery())}`;
+}
+function updatePaymentHint(){renderCart()}
+function placeOrder(e){
+ e.preventDefault();if(!cart.length)return;
+ const state=$('buyerState').value;if(!state){alert(t('statePlaceholder'));return}
+ const subtotal=cart.reduce((sum,x)=>{const p=products.find(p=>p.id===x.id);return sum+(p?p.price*x.qty:0)},0);
+ const order={id:'NM-'+Date.now().toString().slice(-8),name:$('buyerName').value.trim(),phone:$('buyerPhone').value.trim(),state,town:$('buyerTown').value.trim(),address:$('buyerAddress').value.trim(),items:cart.map(x=>({...x,productName:(products.find(p=>p.id===x.id)||{}).name,price:(products.find(p=>p.id===x.id)||{}).price})),subtotal,delivery:estimateDelivery(),total:subtotal+estimateDelivery(),status:'Demo order — not sent to a seller or courier',date:new Date().toLocaleString()};
+ orders.unshift(order);cart=[];saveAll();renderCart();renderOrders();renderAdmin();alert(t('orderSuccess')+order.id);showPage('orders');
+}
+function renderOrders(){
+ const el=$('ordersList');if(!orders.length){el.innerHTML=`<div class="panel text-gray-500">${t('noOrders')}</div>`;return}
+ el.innerHTML=orders.map(o=>`<div class="panel"><div class="flex justify-between gap-2"><b>${t('order')} ${safe(o.id)}</b><span class="text-xs text-gray-500">${safe(o.date)}</span></div><p class="text-sm mt-2">${safe(o.name)} · ${safe(o.state)}, ${safe(o.town)}</p><p class="font-extrabold mt-2">${money(o.total)}</p><p class="text-xs text-orange-700 mt-2">${t('pending')}</p><p class="text-xs text-gray-500 mt-1">${t('status')}: ${safe(o.status)}</p></div>`).join('');
+}
+function fillCategorySelect(){$('newProductCategory').innerHTML=categories.map(c=>`<option value="${safe(c.en)}">${safe(c[lang]||c.en)}</option>`).join('')}
+function addProduct(e){
+ e.preventDefault();
+ const name=$('newProductName').value.trim(),price=Number($('newProductPrice').value),seller=$('newSellerName').value.trim();
+ if(!name||price<=0||!seller){alert('Please enter a product name, valid price, and seller name.');return}
+ const p={id:Date.now(),name,price,state:$('newProductState').value,seller,verified:false,category:$('newProductCategory').value,img:$('newProductImage').value.trim()||'https://placehold.co/600x400?text=Product'};
+ products.unshift(p);saveAll();e.target.reset();renderProducts();renderCategories();renderAdmin();alert(t('added'));showPage('home');
+}
+function loginDemo(e){
+ e.preventDefault();const phone=$('loginPhone').value.trim(),pass=$('loginPassword').value;
+ const accounts={'08000000000':{password:'admin123',role:'Admin',name:'Demo Admin'},'08011111111':{password:'seller123',role:'Seller',name:'Demo Seller'},'08022222222':{password:'buyer123',role:'Buyer',name:'Demo Buyer'}};
+ const account=accounts[phone];
+ if(!account||account.password!==pass){$('loginMessage').textContent=t('loginFailed');$('loginMessage').className='text-sm mt-3 text-red-600';return}
+ currentUser={role:account.role,name:account.name};saveAll();applyTranslations();$('loginMessage').textContent=t('loginSuccess')+account.role;$('loginMessage').className='text-sm mt-3 text-green-700';
+ if(account.role==='Admin')showPage('admin');else if(account.role==='Seller')showPage('sell');else showPage('profile');
+}
+function logoutDemo(){currentUser=null;saveAll();applyTranslations();showPage('profile');alert(t('loggedOut'))}
+function renderAdmin(){
+ $('adminStats').innerHTML=[['adminStatsOrders',orders.length],['adminStatsProducts',products.length],['adminStatsUsers',3],['adminStatsCommission','5%']].map(([label,value])=>`<div class="panel"><p class="text-xs text-gray-500">${t(label)}</p><p class="text-xl font-extrabold mt-1">${value}</p></div>`).join('');
+ $('adminOrders').innerHTML=orders.length?orders.slice(0,10).map(o=>`<div class="border-b last:border-0 py-3"><div class="flex justify-between gap-2"><b>${safe(o.id)}</b><b>${money(o.total)}</b></div><p class="text-sm">${safe(o.name)} · ${safe(o.state)}</p><p class="text-xs text-orange-700 mt-1">${t('pending')}</p></div>`).join(''):`<p class="text-sm text-gray-500">${t('noAdminOrders')}</p>`;
+}
+function safe(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+$('langSelector').value=lang;applyTranslations();renderProducts();renderCategories();renderCart();renderOrders();renderAdmin();
+</script>
+</body>
+</html>
